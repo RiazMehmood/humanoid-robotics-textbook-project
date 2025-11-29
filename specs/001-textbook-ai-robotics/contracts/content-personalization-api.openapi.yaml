@@ -1,0 +1,175 @@
+openapi: 3.0.0
+info:
+  title: Content Personalization API
+  version: 1.0.0
+  description: API for managing user content preferences and delivering personalized/translated content.
+
+servers:
+  - url: /personalization
+    description: Content Personalization Service
+
+paths:
+  /preferences:
+    get:
+      summary: Get user content preferences
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User preferences retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  language:
+                    type: string
+                    description: Preferred language (e.g., "en", "es")
+                  theme:
+                    type: string
+                    description: Preferred theme (e.g., "light", "dark")
+                  # Add other preferences as needed
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update user content preferences
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                language:
+                  type: string
+                  description: Preferred language (e.g., "en", "es")
+                theme:
+                  type: string
+                  description: Preferred theme (e.g., "light", "dark")
+      responses:
+        '200':
+          description: Preferences updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Invalid preference data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /content/{contentId}/translate:
+    get:
+      summary: Get translated content for a specific item
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: contentId
+          required: true
+          schema:
+            type: string
+          description: The ID of the content item to translate.
+        - in: query
+          name: targetLanguage
+          required: true
+          schema:
+            type: string
+          description: The language to translate the content into (e.g., "es").
+      responses:
+        '200':
+          description: Translated content retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contentId:
+                    type: string
+                  translatedText:
+                    type: string
+                  sourceLanguage:
+                    type: string
+                  targetLanguage:
+                    type: string
+        '400':
+          description: Invalid content ID or target language
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Content not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /content/recommendations:
+    get:
+      summary: Get personalized content recommendations for the user
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Personalized content recommendations retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recommendations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        contentId:
+                          type: string
+                        title:
+                          type: string
+                        # Add other relevant content attributes
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string

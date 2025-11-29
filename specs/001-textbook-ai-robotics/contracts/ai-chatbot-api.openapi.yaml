@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: AI Chatbot API
+  version: 1.0.0
+  description: API for interacting with the AI-powered chatbot for textbook Q&A.
+
+servers:
+  - url: /chatbot
+    description: AI Chatbot Service
+
+paths:
+  /query:
+    post:
+      summary: Submit a query to the AI chatbot
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - queryText
+              properties:
+                queryText:
+                  type: string
+                  description: The user's question or query to the chatbot.
+                context:
+                  type: object
+                  description: Optional context from the current user session or textbook page.
+                  properties:
+                    currentPageUrl:
+                      type: string
+                      format: uri
+                    selectedText:
+                      type: string
+      responses:
+        '200':
+          description: Successful response from the chatbot
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseText:
+                    type: string
+                    description: The AI-generated answer.
+                  sourceReferences:
+                    type: array
+                    items:
+                      type: string
+                    description: References to textbook sections or external links.
+                  confidenceScore:
+                    type: number
+                    format: float
+                    description: Numeric score indicating the chatbot's confidence in the answer.
+        '400':
+          description: Invalid query or missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error or chatbot processing failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
