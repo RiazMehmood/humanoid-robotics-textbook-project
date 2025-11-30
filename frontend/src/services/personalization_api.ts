@@ -142,8 +142,9 @@ export async function translateContent(
     sourceLanguage,
   });
 
+  const apiUrl = getApiBaseUrl();
   const response = await fetch(
-    `${API_BASE_URL}/personalization/content/${contentId}/translate?${params}`,
+    `${apiUrl}/personalization/content/${contentId}/translate?${params}`,
     {
       method: 'GET',
       headers,

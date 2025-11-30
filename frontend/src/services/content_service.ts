@@ -154,8 +154,9 @@ class ContentService {
         }
       }
 
+      const apiUrl = getApiBaseUrl();
       const response = await fetch(
-        `${API_BASE_URL}/content/personalized${userId ? `?user_id=${userId}` : ''}`,
+        `${apiUrl}/content/personalized${userId ? `?user_id=${userId}` : ''}`,
         {
           method: 'GET',
           headers,

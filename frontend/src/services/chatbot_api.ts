@@ -86,7 +86,7 @@ class ChatbotAPI {
       // Handle network errors (backend not running, CORS, etc.)
       if (error instanceof TypeError && error.message.includes('fetch')) {
         throw new Error(
-          `Cannot connect to backend server at ${API_BASE_URL}. ` +
+          `Cannot connect to backend server at ${getApiBaseUrl()}. ` +
           `Please make sure the backend is running on port 8000. ` +
           `Start it with: cd backend && uvicorn main:app --reload`
         );
