@@ -127,10 +127,11 @@ REACT_APP_API_URL=https://your-backend.onrender.com
 # In Railway dashboard:
 1. New Project → Deploy from GitHub
 2. Select your repository
-3. Add Service → Select backend/ directory
-4. Railway auto-detects Python
-5. Add all environment variables (see above)
-6. Deploy → Get URL: https://your-backend.railway.app
+3. Add Service → Select your repository
+4. ⚠️ IMPORTANT: Go to Settings → Set "Root Directory" to "backend"
+5. Railway auto-detects Python from backend/requirements.txt
+6. Add all environment variables (see above)
+7. Deploy → Get URL: https://your-backend.railway.app
 ```
 
 #### 2. Frontend on Vercel:

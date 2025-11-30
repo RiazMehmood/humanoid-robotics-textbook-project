@@ -6,10 +6,17 @@
 
 1. **Sign up**: Go to [railway.app](https://railway.app) and sign up with GitHub
 2. **New Project**: Click "New Project" → "Deploy from GitHub repo"
-3. **Select Repo**: Choose your repository
-4. **Add Service**: Click "New" → "GitHub Repo" → Select `backend/` directory
-5. **Railway auto-detects**: It will detect Python and FastAPI automatically
-6. **Add Environment Variables**:
+3. **Select Repo**: Choose your repository (`humanoid-robotics-textbook-project`)
+4. **Add Service**: Click "New" → "GitHub Repo" → Select your repository
+5. **⚠️ IMPORTANT - Set Root Directory**:
+   - After adding the service, click on the service name
+   - Go to **Settings** tab
+   - Find **"Root Directory"** option
+   - Set it to: `backend` (without the slash)
+   - Click **Save**
+   - This tells Railway to only deploy the `backend/` folder
+6. **Railway auto-detects**: It will detect Python and FastAPI automatically from the `backend/` directory
+7. **Add Environment Variables**:
    - Click on your service → "Variables" tab
    - Add these (get values from your `.env` file):
      ```
