@@ -3,7 +3,7 @@ import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Physical AI & Humanoid Robotics Textbook',
+  title: 'Physical AI & Humanoid Robotics',
   tagline: 'Bridging the gap between digital brains and physical bodies',
   url: 'https://humanoid-robotics-textbook-project.vercel.app',
   baseUrl: '/',
@@ -62,7 +62,7 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'Physical AI & Humanoid Robotics Textbook',
+      title: 'Physical AI & Humanoid Robotics',
       logo: {
         alt: 'My Site Logo',
         src: 'img/logo.svg',
