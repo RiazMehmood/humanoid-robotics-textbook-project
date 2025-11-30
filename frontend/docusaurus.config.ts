@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Physical AI & Humanoid Robotics Textbook',
   tagline: 'Bridging the gap between digital brains and physical bodies',
-  url: 'https://physical-ai-textbook.example.com', // Update this with your Vercel URL
+  url: 'https://humanoid-robotics-textbook-project.vercel.app',
   baseUrl: '/',
   
   // Inject API URL as a script tag for runtime access
