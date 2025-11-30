@@ -45,7 +45,7 @@
    - **Build Command**: `npm run build` (auto-filled)
    - **Output Directory**: `build` (auto-filled)
 5. **Environment Variables**:
-   - Add: `REACT_APP_API_URL` = `https://your-backend-production.up.railway.app`
+   - Add: `REACT_APP_API_URL` = `humanoid-robotics-textbook-project-production.up.railway.app`
 6. **Deploy**: Click "Deploy" → Vercel gives you a URL like:
    ```
    https://your-frontend.vercel.app

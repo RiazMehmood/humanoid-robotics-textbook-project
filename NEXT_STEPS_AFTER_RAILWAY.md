@@ -38,18 +38,22 @@ Now deploy the frontend:
 3. **New Project**:
    - Click "Add New" → "Project"
    - Import your GitHub repository: `humanoid-robotics-textbook-project`
-4. **Configure Project**:
+4. **⚠️ IMPORTANT - Select Branch**:
+   - In the import screen, look for **"Branch"** dropdown
+   - **Select `master` branch** (not `feature/constitution-update` or other branches)
+   - This ensures you're deploying from the correct branch with all merged changes
+5. **Configure Project**:
    - **Root Directory**: `frontend` (click "Edit" and set to `frontend`)
    - **Framework Preset**: Docusaurus (should auto-detect)
    - **Build Command**: `npm run build` (should auto-fill)
    - **Output Directory**: `build` (should auto-fill)
-5. **Environment Variables**:
+6. **Environment Variables**:
    - Click "Environment Variables"
    - Add: `REACT_APP_API_URL` = `https://your-railway-app.up.railway.app`
    - (Use your actual Railway URL from Step 1)
-6. **Deploy**: Click "Deploy"
-7. **Wait for deployment** (usually 2-3 minutes)
-8. **Get Frontend URL**: Vercel will give you a URL like `https://your-app.vercel.app`
+7. **Deploy**: Click "Deploy"
+8. **Wait for deployment** (usually 2-3 minutes)
+9. **Get Frontend URL**: Vercel will give you a URL like `https://your-app.vercel.app`
 
 ### Step 4: Update Backend CORS
 
