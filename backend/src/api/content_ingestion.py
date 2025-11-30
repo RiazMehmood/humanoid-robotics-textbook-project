@@ -87,12 +87,15 @@ async def ingest_batch(request: BatchIngestionRequest):
         )
 
 
-@router.post("/ingest/markdown", status_code=status.HTTP_201_CREATED)
-async def ingest_markdown(
-    content: str,
-    url: str,
+class MarkdownIngestionRequest(BaseModel):
+    """Request for markdown content ingestion."""
+    content: str
+    url: str
     section: Optional[str] = None
-):
+
+
+@router.post("/ingest/markdown", status_code=status.HTTP_201_CREATED)
+async def ingest_markdown(request: MarkdownIngestionRequest):
     """
     Ingest content from markdown, automatically chunking it.
     
@@ -100,15 +103,15 @@ async def ingest_markdown(
     """
     try:
         success = content_ingestion_service.ingest_from_markdown(
-            markdown_content=content,
-            url=url,
-            section=section
+            markdown_content=request.content,
+            url=request.url,
+            section=request.section
         )
         
         if success:
             return {
                 "status": "success",
-                "message": f"Markdown content from {url} ingested successfully"
+                "message": f"Markdown content from {request.url} ingested successfully"
             }
         else:
             raise HTTPException(
