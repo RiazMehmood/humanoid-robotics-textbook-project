@@ -40,21 +40,37 @@ def init_database():
         try:
             # Handle both postgresql:// and postgresql+psycopg:// URLs
             db_url = settings.database_url
+            if not db_url:
+                logger.warning("DATABASE_URL not set. Running in no-database mode.")
+                from unittest.mock import MagicMock
+                SessionLocal = MagicMock
+                return
+
             # Convert postgresql:// to postgresql+psycopg:// for psycopg 3.x
             if db_url.startswith("postgresql://") and "+psycopg" not in db_url and "+psycopg2" not in db_url:
                 # Replace postgresql:// with postgresql+psycopg:// to use psycopg 3.x driver
                 db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
                 logger.info("Converted database URL to use psycopg 3.x driver")
+            
             engine = create_engine(
                 db_url,
                 pool_pre_ping=True,
                 echo=settings.debug
             )
             SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-            logger.info("Database connection initialized")
+            
+            # Test connection
+            with engine.connect() as conn:
+                logger.info("✅ Database connection verified successfully")
+                
         except Exception as e:
-            logger.warning(f"Database connection failed: {e}. Running in no-database mode.")
-            # Create a mock session for development
+            logger.error(f"❌ Database connection failed: {e}")
+            if settings.environment == "production":
+                # In production, we want to fail fast if DB is missing
+                logger.error("Critical Error: Database connection failed in production!")
+                # We still fallback to mock to prevent crash loop, but this explains the error
+            
+            # Create a mock session for development/fallback
             from unittest.mock import MagicMock
             SessionLocal = MagicMock
 
