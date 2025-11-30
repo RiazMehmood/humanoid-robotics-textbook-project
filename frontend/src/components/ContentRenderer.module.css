@@ -1,0 +1,75 @@
+.contentRenderer {
+  position: relative;
+}
+
+.translationBadge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--ifm-color-info);
+  color: white;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.showOriginalButton {
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.showOriginalButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.translatingIndicator {
+  padding: 1rem;
+  text-align: center;
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+}
+
+.errorMessage {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--ifm-color-danger);
+  color: white;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.content {
+  line-height: 1.6;
+}
+
+.translateButtonContainer {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.translateButton {
+  padding: 0.5rem 1rem;
+  background-color: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.translateButton:hover {
+  background-color: var(--ifm-color-primary-dark);
+}
+
+.translateButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+

@@ -1,0 +1,144 @@
+.signInButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.signInButton:hover {
+  background-color: var(--ifm-color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.buttonIcon {
+  font-size: 1rem;
+}
+
+.authMenu {
+  position: relative;
+}
+
+.userButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--ifm-color-emphasis-200);
+  color: var(--ifm-font-color-base);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.userButton:hover {
+  background-color: var(--ifm-color-emphasis-300);
+  border-color: var(--ifm-color-primary);
+}
+
+.userIcon {
+  font-size: 1rem;
+}
+
+.userText {
+  font-weight: 500;
+}
+
+.dropdownIcon {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  transition: transform 0.2s;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.menuHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--ifm-color-primary);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.menuHeaderIcon {
+  font-size: 1rem;
+}
+
+.menuHeaderText {
+  flex: 1;
+}
+
+.menuEmail {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  word-break: break-all;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.menuDivider {
+  height: 1px;
+  background-color: var(--ifm-color-emphasis-300);
+  margin: 0.25rem 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.menuItem:hover {
+  background-color: var(--ifm-color-emphasis-200);
+}
+
+.menuItem:last-child {
+  color: var(--ifm-color-danger);
+}
+
+.menuItem:last-child:hover {
+  background-color: var(--ifm-color-danger);
+  color: white;
+}
+
+.menuItemIcon {
+  font-size: 1rem;
+  width: 1.2rem;
+  text-align: center;
+}
+
+

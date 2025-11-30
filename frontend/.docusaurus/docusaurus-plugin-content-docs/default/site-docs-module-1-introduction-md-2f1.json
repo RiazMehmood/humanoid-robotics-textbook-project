@@ -1,0 +1,27 @@
+{
+  "id": "module1/introduction",
+  "title": "Module 1: Introduction to ROS 2",
+  "description": "Overview",
+  "source": "@site/docs/module1/introduction.md",
+  "sourceDirName": "module1",
+  "slug": "/module1/introduction",
+  "permalink": "/module1/introduction",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "lastUpdatedAt": 1539502055000,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "textbookSidebar",
+  "previous": {
+    "title": "Introduction to Physical AI & Humanoid Robotics",
+    "permalink": "/intro"
+  },
+  "next": {
+    "title": "ROS 2 Fundamentals",
+    "permalink": "/module1/ros2-fundamentals"
+  }
+}

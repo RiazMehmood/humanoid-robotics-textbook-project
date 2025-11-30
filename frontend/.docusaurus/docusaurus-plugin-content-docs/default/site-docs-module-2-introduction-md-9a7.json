@@ -1,0 +1,27 @@
+{
+  "id": "module2/introduction",
+  "title": "Module 2: Introduction to Digital Twins",
+  "description": "Overview",
+  "source": "@site/docs/module2/introduction.md",
+  "sourceDirName": "module2",
+  "slug": "/module2/introduction",
+  "permalink": "/module2/introduction",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "lastUpdatedAt": 1539502055000,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "textbookSidebar",
+  "previous": {
+    "title": "URDF for Humanoid Robots",
+    "permalink": "/module1/urdf-humanoids"
+  },
+  "next": {
+    "title": "Gazebo Simulation",
+    "permalink": "/module2/gazebo-simulation"
+  }
+}

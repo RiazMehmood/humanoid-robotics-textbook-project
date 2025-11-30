@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Update project constitution and add initial prompt history record\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(git remote add:*)",
+      "Bash(.specify/scripts/powershell/check-prerequisites.ps1:*)",
+      "Bash(.specify/scripts/powershell/setup-plan.ps1:*)",
+      "WebFetch(domain:docs.google.com)",
+      "Bash(.venvScriptsactivate:*)",
+      "Bash(pip install:*)",
+      "Bash(D:\\AI-Hackathon\\ai-book with claude\\book_claude\\backend\\venv\\Scripts\\pip install:*)",
+      "Bash(npx create-docusaurus@latest:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

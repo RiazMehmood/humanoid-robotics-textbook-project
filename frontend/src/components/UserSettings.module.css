@@ -1,0 +1,69 @@
+.settingsContainer {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+}
+
+.settingsContainer h2 {
+  margin-bottom: 1.5rem;
+  color: var(--ifm-heading-color);
+}
+
+.preferenceGroup {
+  margin-bottom: 2rem;
+}
+
+.preferenceGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--ifm-heading-color);
+}
+
+.select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+}
+
+.select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.helpText {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.errorMessage {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--ifm-color-danger);
+  color: white;
+  border-radius: 4px;
+}
+
+.successMessage {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--ifm-color-success);
+  color: white;
+  border-radius: 4px;
+}
+
+.savingIndicator {
+  padding: 0.5rem;
+  text-align: center;
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+}
+
+
