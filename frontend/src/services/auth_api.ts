@@ -4,13 +4,36 @@
 
 // Get API base URL (browser-compatible)
 function getApiBaseUrl(): string {
+  // Check for injected API URL (for production builds)
   if (typeof window !== 'undefined' && (window as any).__API_BASE_URL__) {
     return (window as any).__API_BASE_URL__;
   }
-  // Only access process.env in browser environment
-  if (typeof window !== 'undefined' && typeof process !== 'undefined' && process.env) {
-    return process.env.REACT_APP_API_URL || 'http://localhost:8000';
+  
+  // For Docusaurus, environment variables are available at build time
+  // In production, we need to check window location or use a config
+  if (typeof window !== 'undefined') {
+    // Check if we're in production (not localhost)
+    const isProduction = window.location.hostname !== 'localhost' && 
+                         window.location.hostname !== '127.0.0.1';
+    
+    if (isProduction) {
+      // Try to get from environment variable (set at build time)
+      // Docusaurus injects env vars during build
+      const apiUrl = (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) 
+        || (window as any).process?.env?.REACT_APP_API_URL
+        || null;
+      
+      if (apiUrl) {
+        return apiUrl;
+      }
+      
+      // Fallback: try to construct from current host (if backend is on same domain)
+      // Or use a default production URL pattern
+      console.warn('REACT_APP_API_URL not set. Please set it in Vercel environment variables.');
+    }
   }
+  
+  // Default to localhost for development
   return 'http://localhost:8000';
 }
 

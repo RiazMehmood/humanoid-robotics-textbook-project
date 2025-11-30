@@ -39,6 +39,16 @@ function AuthGuard({ children }: { children: React.ReactNode }): JSX.Element {
 }
 
 export default function Root({children}: {children: React.ReactNode}): JSX.Element {
+  // Inject API URL into window for runtime access
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Get API URL from environment or use default
+      const apiUrl = process.env.REACT_APP_API_URL || process.env.API_URL || 'http://localhost:8000';
+      (window as any).__API_BASE_URL__ = apiUrl;
+      console.log('API Base URL set to:', apiUrl);
+    }
+  }, []);
+
   const handleTextSelected = (text: string) => {
     // Pass to Chatbot via a custom event
     if (typeof window !== 'undefined') {

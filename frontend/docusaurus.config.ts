@@ -2,10 +2,13 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+// Get API URL from environment variable (set in Vercel)
+const API_URL = process.env.REACT_APP_API_URL || process.env.API_URL || 'http://localhost:8000';
+
 const config: Config = {
   title: 'Physical AI & Humanoid Robotics Textbook',
   tagline: 'Bridging the gap between digital brains and physical bodies',
-  url: 'https://physical-ai-textbook.example.com',
+  url: 'https://physical-ai-textbook.example.com', // Update this with your Vercel URL
   baseUrl: '/',
   favicon: 'img/favicon.ico',
 
