@@ -144,12 +144,15 @@ def get_vector_db():
         try:
             _vector_db_instance = VectorDB()
         except Exception as e:
-            logger.warning(f"Vector DB initialization failed: {e}. Running without vector DB.")
+            logger.error(f"❌ Vector DB initialization failed: {e}. Using Mock DB (Data will NOT be saved).")
             # Return a mock object that returns empty results
             from unittest.mock import MagicMock
-            _vector_db_instance = MagicMock()
-            _vector_db_instance.search = lambda *args, **kwargs: []
-            _vector_db_instance.client = None
+            mock = MagicMock()
+            mock.search = lambda *args, **kwargs: []
+            mock.client = None
+            # Add a flag to indicate this is a mock
+            mock.is_mock = True
+            _vector_db_instance = mock
     return _vector_db_instance
 
 # For backward compatibility - lazy access
