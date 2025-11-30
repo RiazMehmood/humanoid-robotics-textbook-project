@@ -3,19 +3,35 @@
  */
 import { getAuthToken } from './auth_api';
 
-// Get API base URL (browser-compatible)
+// Get API base URL (browser-compatible) - shared logic with auth_api.ts
 function getApiBaseUrl(): string {
-  if (typeof window !== 'undefined' && (window as any).__API_BASE_URL__) {
-    return (window as any).__API_BASE_URL__;
+  if (typeof window === 'undefined') {
+    return 'http://localhost:8000';
   }
-  // Only access process.env in browser environment
-  if (typeof window !== 'undefined' && typeof process !== 'undefined' && process.env) {
-    return process.env.REACT_APP_API_URL || 'http://localhost:8000';
+  
+  const windowApiUrl = (window as any).__API_BASE_URL__;
+  if (windowApiUrl) {
+    // Clean the URL - remove any quotes, backticks, or whitespace
+    let cleanUrl = String(windowApiUrl).trim();
+    cleanUrl = cleanUrl.replace(/^[`'"]+|[`'"]+$/g, '');
+    try {
+      cleanUrl = decodeURIComponent(cleanUrl);
+    } catch (e) {
+      // If decoding fails, use as-is
+    }
+    
+    if (cleanUrl && cleanUrl !== 'API_URL_NOT_CONFIGURED' && cleanUrl !== 'undefined' && cleanUrl !== 'null') {
+      if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+        cleanUrl = 'https://' + cleanUrl;
+      }
+      return cleanUrl;
+    }
   }
-  return 'http://localhost:8000';
+  
+  const isProduction = window.location.hostname !== 'localhost' && 
+                       window.location.hostname !== '127.0.0.1';
+  return isProduction ? 'API_URL_NOT_CONFIGURED' : 'http://localhost:8000';
 }
-
-const API_BASE_URL = getApiBaseUrl();
 
 export interface UserPreferences {
   language: string;
@@ -58,7 +74,8 @@ export async function getPreferences(token?: string): Promise<UserPreferences> {
     headers['Authorization'] = `Bearer ${authToken}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}/personalization/preferences`, {
+  const apiUrl = getApiBaseUrl();
+  const response = await fetch(`${apiUrl}/personalization/preferences`, {
     method: 'GET',
     headers,
   });
@@ -87,7 +104,8 @@ export async function updatePreferences(
     headers['Authorization'] = `Bearer ${authToken}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}/personalization/preferences`, {
+  const apiUrl = getApiBaseUrl();
+  const response = await fetch(`${apiUrl}/personalization/preferences`, {
     method: 'PUT',
     headers,
     body: JSON.stringify(preferences),
@@ -161,7 +179,7 @@ export async function getRecommendations(
   });
 
   const response = await fetch(
-    `${API_BASE_URL}/personalization/content/recommendations?${params}`,
+    `${getApiBaseUrl()}/personalization/content/recommendations?${params}`,
     {
       method: 'GET',
       headers,

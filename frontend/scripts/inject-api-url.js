@@ -9,7 +9,17 @@ const fs = require('fs');
 const path = require('path');
 
 // Get API URL from environment variable
-const apiUrl = process.env.REACT_APP_API_URL || process.env.API_URL || 'http://localhost:8000';
+let apiUrl = process.env.REACT_APP_API_URL || process.env.API_URL || 'http://localhost:8000';
+
+// Clean the URL - remove any quotes, backticks, or whitespace
+apiUrl = String(apiUrl).trim();
+// Remove backticks, single quotes, double quotes from start/end
+apiUrl = apiUrl.replace(/^[`'"]+|[`'"]+$/g, '');
+
+// Ensure URL has protocol
+if (apiUrl && !apiUrl.startsWith('http://') && !apiUrl.startsWith('https://')) {
+  apiUrl = 'https://' + apiUrl;
+}
 
 // Path to api-config.js
 const configPath = path.join(__dirname, '..', 'static', 'api-config.js');
@@ -17,10 +27,13 @@ const configPath = path.join(__dirname, '..', 'static', 'api-config.js');
 // Read the template
 let configContent = fs.readFileSync(configPath, 'utf8');
 
-// Replace the placeholder with actual API URL
+// Replace the placeholder with actual API URL (properly escaped)
+// Escape single quotes in the URL
+const escapedApiUrl = apiUrl.replace(/'/g, "\\'");
+
 configContent = configContent.replace(
   "var apiUrl = 'REACT_APP_API_URL_PLACEHOLDER';",
-  `var apiUrl = '${apiUrl}';`
+  `var apiUrl = '${escapedApiUrl}';`
 );
 
 // Write back

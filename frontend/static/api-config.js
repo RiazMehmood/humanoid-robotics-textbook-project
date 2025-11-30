@@ -22,8 +22,26 @@
     }
   }
   
-  // Inject into window for runtime access
+  // Clean the URL - remove any quotes, backticks, or whitespace
   if (apiUrl) {
+    apiUrl = String(apiUrl).trim();
+    // Remove backticks, single quotes, double quotes from start/end
+    apiUrl = apiUrl.replace(/^[`'"]+|[`'"]+$/g, '');
+    // Remove URL encoding artifacts
+    try {
+      apiUrl = decodeURIComponent(apiUrl);
+    } catch (e) {
+      // If decoding fails, use as-is
+    }
+    
+    // Ensure URL has protocol
+    if (apiUrl && !apiUrl.startsWith('http://') && !apiUrl.startsWith('https://')) {
+      apiUrl = 'https://' + apiUrl;
+    }
+  }
+  
+  // Inject into window for runtime access
+  if (apiUrl && apiUrl !== 'null' && apiUrl !== 'undefined') {
     window.__API_BASE_URL__ = apiUrl;
     console.log('API Base URL configured:', apiUrl);
   } else {

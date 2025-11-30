@@ -3,43 +3,48 @@
  */
 
 // Get API base URL (browser-compatible)
-// Docusaurus injects environment variables at build time via webpack DefinePlugin
+// The API URL is injected by api-config.js script which runs before React loads
 function getApiBaseUrl(): string {
+  if (typeof window === 'undefined') {
+    // SSR - return default, will be overridden on client
+    return 'http://localhost:8000';
+  }
+  
   // Priority 1: Check for window-injected API URL (from api-config.js script)
-  if (typeof window !== 'undefined' && (window as any).__API_BASE_URL__) {
-    const url = (window as any).__API_BASE_URL__;
-    if (url && url !== 'API_URL_NOT_CONFIGURED') {
-      return url;
-    }
-  }
-  
-  // Priority 2: Check for webpack-injected environment variable
-  // This works because webpack DefinePlugin replaces process.env.REACT_APP_API_URL at build time
-  if (typeof window !== 'undefined') {
-    // In production build, webpack will replace this with the actual value
-    const webpackApiUrl = (typeof process !== 'undefined' && (process as any).env?.REACT_APP_API_URL);
-    if (webpackApiUrl && webpackApiUrl !== 'undefined') {
-      return webpackApiUrl;
-    }
-  }
-  
-  // Priority 3: Check if we're in production and log error
-  if (typeof window !== 'undefined') {
-    const isProduction = window.location.hostname !== 'localhost' && 
-                         window.location.hostname !== '127.0.0.1';
+  const windowApiUrl = (window as any).__API_BASE_URL__;
+  if (windowApiUrl) {
+    // Clean the URL - remove any quotes, backticks, or whitespace
+    let cleanUrl = String(windowApiUrl).trim();
+    // Remove backticks, single quotes, double quotes
+    cleanUrl = cleanUrl.replace(/^[`'"]+|[`'"]+$/g, '');
+    // Remove URL encoding artifacts
+    cleanUrl = decodeURIComponent(cleanUrl);
     
-    if (isProduction) {
-      console.error('API URL not configured! Please set REACT_APP_API_URL in Vercel environment variables and redeploy.');
-      // Don't return invalid URL, return a clear error message
-      return 'API_URL_NOT_CONFIGURED';
+    if (cleanUrl && cleanUrl !== 'API_URL_NOT_CONFIGURED' && cleanUrl !== 'undefined' && cleanUrl !== 'null') {
+      // Ensure URL has protocol
+      if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+        cleanUrl = 'https://' + cleanUrl;
+      }
+      return cleanUrl;
     }
+  }
+  
+  // Priority 2: Check if we're in production and log error
+  const isProduction = window.location.hostname !== 'localhost' && 
+                       window.location.hostname !== '127.0.0.1';
+  
+  if (isProduction) {
+    console.error('API URL not configured! Please set REACT_APP_API_URL in Vercel environment variables and redeploy.');
+    console.error('Current window.__API_BASE_URL__:', windowApiUrl);
+    return 'API_URL_NOT_CONFIGURED';
   }
   
   // Default to localhost for development
   return 'http://localhost:8000';
 }
 
-const API_BASE_URL = getApiBaseUrl();
+// Don't cache API_BASE_URL - call getApiBaseUrl() directly in each function
+// This ensures we get the latest value, especially after api-config.js loads
 
 export interface SignUpRequest {
   email: string;
@@ -67,11 +72,12 @@ export interface AuthResponse {
  * Sign up a new user.
  */
 export async function signUp(data: SignUpRequest): Promise<AuthResponse> {
-  if (API_BASE_URL === 'API_URL_NOT_CONFIGURED') {
+  const apiUrl = getApiBaseUrl(); // Get fresh URL each time
+  if (apiUrl === 'API_URL_NOT_CONFIGURED') {
     throw new Error('API URL not configured. Please set REACT_APP_API_URL in Vercel environment variables.');
   }
   
-  const response = await fetch(`${API_BASE_URL}/auth/register`, {
+  const response = await fetch(`${apiUrl}/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -105,11 +111,12 @@ export async function signUp(data: SignUpRequest): Promise<AuthResponse> {
  * Sign in an existing user.
  */
 export async function signIn(data: SignInRequest): Promise<AuthResponse> {
-  if (API_BASE_URL === 'API_URL_NOT_CONFIGURED') {
+  const apiUrl = getApiBaseUrl(); // Get fresh URL each time
+  if (apiUrl === 'API_URL_NOT_CONFIGURED') {
     throw new Error('API URL not configured. Please set REACT_APP_API_URL in Vercel environment variables.');
   }
   
-  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+  const response = await fetch(`${apiUrl}/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -144,7 +151,8 @@ export async function signOut(): Promise<void> {
   
   if (token) {
     try {
-      await fetch(`${API_BASE_URL}/auth/logout`, {
+      const apiUrl = getApiBaseUrl();
+      await fetch(`${apiUrl}/auth/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -206,7 +214,8 @@ export async function refreshToken(): Promise<string> {
     throw new Error('No token to refresh');
   }
 
-  const response = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
+  const apiUrl = getApiBaseUrl();
+  const response = await fetch(`${apiUrl}/auth/refresh-token`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

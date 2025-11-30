@@ -3,15 +3,35 @@
  * This service handles dynamic content fetching, caching, and content personalization.
  */
 
-// Get API URL from window object or use default
+// Get API URL from window object or use default - shared logic with auth_api.ts
 const getApiBaseUrl = (): string => {
-  if (typeof window !== 'undefined' && (window as any).__API_BASE_URL__) {
-    return `${(window as any).__API_BASE_URL__}/api/v1`;
+  if (typeof window === 'undefined') {
+    return 'http://localhost:8000/api/v1';
   }
-  return 'http://localhost:8000/api/v1';
+  
+  const windowApiUrl = (window as any).__API_BASE_URL__;
+  if (windowApiUrl) {
+    // Clean the URL - remove any quotes, backticks, or whitespace
+    let cleanUrl = String(windowApiUrl).trim();
+    cleanUrl = cleanUrl.replace(/^[`'"]+|[`'"]+$/g, '');
+    try {
+      cleanUrl = decodeURIComponent(cleanUrl);
+    } catch (e) {
+      // If decoding fails, use as-is
+    }
+    
+    if (cleanUrl && cleanUrl !== 'API_URL_NOT_CONFIGURED' && cleanUrl !== 'undefined' && cleanUrl !== 'null') {
+      if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+        cleanUrl = 'https://' + cleanUrl;
+      }
+      return `${cleanUrl}/api/v1`;
+    }
+  }
+  
+  const isProduction = window.location.hostname !== 'localhost' && 
+                       window.location.hostname !== '127.0.0.1';
+  return isProduction ? 'API_URL_NOT_CONFIGURED' : 'http://localhost:8000/api/v1';
 };
-
-const API_BASE_URL = getApiBaseUrl();
 
 export interface ContentItem {
   id: string;
@@ -56,7 +76,8 @@ class ContentService {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/content/${id}`, {
+      const apiUrl = getApiBaseUrl();
+      const response = await fetch(`${apiUrl}/content/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -92,7 +113,8 @@ class ContentService {
         ...(params.offset && { offset: params.offset.toString() }),
       });
 
-      const response = await fetch(`${API_BASE_URL}/content/search?${queryParams}`, {
+      const apiUrl = getApiBaseUrl();
+      const response = await fetch(`${apiUrl}/content/search?${queryParams}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

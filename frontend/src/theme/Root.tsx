@@ -39,30 +39,28 @@ function AuthGuard({ children }: { children: React.ReactNode }): JSX.Element {
 }
 
 export default function Root({children}: {children: React.ReactNode}): JSX.Element {
-  // Inject API URL into window for runtime access (set at build time)
-  if (typeof window !== 'undefined') {
-    // In production, Docusaurus injects env vars during build
-    // We'll use a script tag or data attribute approach instead
-    // For now, check if it's already set, otherwise use a fallback
-    if (!(window as any).__API_BASE_URL__) {
-      // Try to get from a data attribute or meta tag
-      const apiUrlMeta = document.querySelector('meta[name="api-url"]');
-      if (apiUrlMeta) {
-        (window as any).__API_BASE_URL__ = apiUrlMeta.getAttribute('content');
-      } else {
-        // Fallback: check if we're in production and construct URL
-        const isProduction = window.location.hostname !== 'localhost' && 
-                           window.location.hostname !== '127.0.0.1';
-        if (isProduction) {
-          // In production, we need the Railway URL - this should be set via Vercel env var
-          // For now, log a warning
-          console.warn('API URL not configured. Please set REACT_APP_API_URL in Vercel environment variables.');
-        }
-        // Default to localhost for development
-        (window as any).__API_BASE_URL__ = 'http://localhost:8000';
+  // Inject API URL into window for runtime access (set at build time via api-config.js)
+  // Use useEffect to avoid SSR issues
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // The api-config.js script should have already set this
+      // If not set, wait a bit for the script to load
+      if (!(window as any).__API_BASE_URL__) {
+        // Wait for api-config.js to load
+        setTimeout(() => {
+          if (!(window as any).__API_BASE_URL__) {
+            const isProduction = window.location.hostname !== 'localhost' && 
+                                 window.location.hostname !== '127.0.0.1';
+            if (isProduction) {
+              console.error('API URL not configured. Please set REACT_APP_API_URL in Vercel environment variables and redeploy.');
+            } else {
+              (window as any).__API_BASE_URL__ = 'http://localhost:8000';
+            }
+          }
+        }, 100);
       }
     }
-  }
+  }, []);
 
   const handleTextSelected = (text: string) => {
     // Pass to Chatbot via a custom event
