@@ -118,6 +118,24 @@ async def health_check():
     return {"status": "healthy"}
 
 
+# CORS test endpoint
+@app.options("/{full_path:path}")
+async def options_handler(full_path: str):
+    """Handle OPTIONS preflight requests for all paths."""
+    return {"message": "OK"}
+
+
+# CORS info endpoint (for debugging)
+@app.get("/cors-info")
+async def cors_info():
+    """Get CORS configuration info (for debugging)."""
+    return {
+        "cors_origins": cors_origins,
+        "cors_origins_from_env": settings.cors_origins,
+        "cors_origins_list": settings.get_cors_origins_list(),
+    }
+
+
 # Startup event
 @app.on_event("startup")
 async def startup_event():
