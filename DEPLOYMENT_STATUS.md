@@ -15,35 +15,31 @@ The following deployment configuration tasks have been completed:
 
 The following tasks require manual setup on deployment platforms:
 
-### T047: Railway Backend Setup
+### T047: Railway Backend Setup ✅ **COMPLETED**
+**Status**: Successfully deployed to Railway
+**Backend URL**: (Get this from Railway dashboard - e.g., `https://your-app.up.railway.app`)
 **Action Required**: 
-1. Go to [railway.app](https://railway.app)
-2. Create new project → Deploy from GitHub
-3. Select `backend/` directory
-4. Add environment variables:
-   - `DATABASE_URL` (from Neon Postgres)
-   - `QDRANT_URL` (from Qdrant Cloud)
-   - `QDRANT_API_KEY` (from Qdrant Cloud)
-   - `GEMINI_API_KEY` (your Gemini API key)
-   - `SECRET_KEY` (generate secure random key)
-   - `CORS_ORIGINS` (will add frontend URL after T048)
-   - `ENVIRONMENT=production`
-   - `DEBUG=false`
+- ✅ Railway project created
+- ✅ Root directory set to `backend`
+- ✅ Environment variables configured
+- ✅ Deployment successful
+**Next Step**: Copy your Railway backend URL for frontend configuration
 
-### T048: Vercel Frontend Setup
+### T048: Vercel Frontend Setup ⏳ **NEXT STEP**
 **Action Required**:
 1. Go to [vercel.com](https://vercel.com)
 2. Create new project → Import from GitHub
 3. Root Directory: `frontend`
 4. Build Command: `npm run build`
 5. Output Directory: `build`
-6. Environment Variable: `REACT_APP_API_URL` = (Railway backend URL from T047)
+6. Environment Variable: `REACT_APP_API_URL` = `https://your-railway-app.up.railway.app` (use your actual Railway URL)
 
-### T049: Update Backend CORS
+### T049: Update Backend CORS ⏳ **PENDING T048**
 **Action Required**:
-1. After T048 completes, get Vercel frontend URL
-2. Update Railway environment variable `CORS_ORIGINS` with frontend URL
-3. Railway will auto-redeploy
+1. After T048 completes, get Vercel frontend URL (e.g., `https://your-app.vercel.app`)
+2. Go to Railway dashboard → Your service → Variables tab
+3. Update `CORS_ORIGINS` environment variable with frontend URL
+4. Railway will auto-redeploy
 
 ### T050: Update Frontend Config
 **Action Required**:
