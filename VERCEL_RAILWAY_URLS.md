@@ -78,3 +78,4 @@ Go to: Railway Dashboard → Your Service → Variables
 - Check that the backend is running (visit /docs endpoint)
 - Verify the endpoint path is correct (/auth/register, not /api/v1/auth/register)
 
+

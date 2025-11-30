@@ -12,3 +12,4 @@ export default function AuthNavbarItem(): JSX.Element {
   );
 }
 
+
