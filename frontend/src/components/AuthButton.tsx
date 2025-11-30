@@ -59,20 +59,23 @@ export default function AuthButton(): JSX.Element {
   };
 
   // Get user email from token if available
-  const getUserEmail = (): string | null => {
-    if (typeof window === 'undefined') return null;
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Only run on client to avoid hydration mismatch
     try {
       const token = localStorage.getItem('auth_token');
-      if (!token) return null;
+      if (!token) {
+        setUserEmail(null);
+        return;
+      }
       // Decode JWT token to get email (simple base64 decode)
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.email || null;
+      setUserEmail(payload.email || null);
     } catch (error) {
-      return null;
+      setUserEmail(null);
     }
-  };
-
-  const userEmail = getUserEmail();
+  }, [isAuthenticated]);
 
   if (!isAuthenticated) {
     return (
