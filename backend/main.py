@@ -52,12 +52,16 @@ app = FastAPI(
 )
 
 # Configure CORS
+cors_origins = settings.get_cors_origins_list() + ["http://localhost:3000", "http://127.0.0.1:3000"]
+logger.info(f"🌐 CORS allowed origins: {cors_origins}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.get_cors_origins_list() + ["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Include routers (only if available)
@@ -120,6 +124,8 @@ async def startup_event():
     logger.info("Application starting up...")
     logger.info(f"Environment: {settings.environment}")
     logger.info(f"Debug mode: {settings.debug}")
+    logger.info(f"CORS Origins from env: {settings.cors_origins}")
+    logger.info(f"CORS Origins list: {settings.get_cors_origins_list()}")
 
 
 # Shutdown event
