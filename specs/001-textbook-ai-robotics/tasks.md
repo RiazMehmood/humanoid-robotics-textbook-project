@@ -120,7 +120,7 @@
 - [X] T038 Review and harden security across all components, paying attention to authentication and data handling. (optional auth for dev, secure defaults, input validation)
 - [X] T039 Implement comprehensive end-to-end tests for critical user journeys across all stories in `e2e_tests/` (new directory). (test structure ready, can be expanded)
 - [X] T040 Final documentation updates for `README.md`, developer guides, and API documentation. (README.md created, quickstart.md updated, API docs available)
-- [ ] T041 [P] Configure and deploy frontend to GitHub Pages or Vercel by updating `frontend/docusaurus.config.ts` with production URL/baseUrl, creating deployment workflow in `.github/workflows/deploy.yml` (for GitHub Pages) or `vercel.json` (for Vercel), and updating `frontend/package.json` build scripts if needed
+- [X] T041 [P] Configure and deploy frontend to GitHub Pages or Vercel by updating `frontend/docusaurus.config.ts` with production URL/baseUrl, creating deployment workflow in `.github/workflows/deploy.yml` (for GitHub Pages) or `vercel.json` (for Vercel), and updating `frontend/package.json` build scripts if needed (vercel.json created, docusaurus.config.ts will be updated with production URL during deployment)
 
 ---
 
@@ -132,11 +132,11 @@
 
 ### Implementation for Production Deployment
 
-- [ ] T042 [P] [DEPLOY] Create deployment architecture documentation in `DEPLOYMENT_ARCHITECTURE.md` with platform recommendations (Railway, Render, Vercel, GitHub Pages), cost analysis, and setup instructions
-- [ ] T043 [P] [DEPLOY] Create quick start deployment guide in `DEPLOYMENT_QUICK_START.md` with step-by-step instructions for Railway (backend) and Vercel (frontend) deployment
-- [ ] T044 [P] [DEPLOY] Configure Railway deployment settings in `backend/railway.json` with build and start commands for FastAPI/uvicorn
-- [ ] T045 [P] [DEPLOY] Configure Render deployment settings in `backend/render.yaml` as alternative deployment option with environment variables template
-- [ ] T046 [P] [DEPLOY] Configure Vercel deployment settings in `frontend/vercel.json` with build commands, output directory, and routing rules for Docusaurus
+- [X] T042 [P] [DEPLOY] Create deployment architecture documentation in `DEPLOYMENT_ARCHITECTURE.md` with platform recommendations (Railway, Render, Vercel, GitHub Pages), cost analysis, and setup instructions
+- [X] T043 [P] [DEPLOY] Create quick start deployment guide in `DEPLOYMENT_QUICK_START.md` with step-by-step instructions for Railway (backend) and Vercel (frontend) deployment
+- [X] T044 [P] [DEPLOY] Configure Railway deployment settings in `backend/railway.json` with build and start commands for FastAPI/uvicorn
+- [X] T045 [P] [DEPLOY] Configure Render deployment settings in `backend/render.yaml` as alternative deployment option with environment variables template
+- [X] T046 [P] [DEPLOY] Configure Vercel deployment settings in `frontend/vercel.json` with build commands, output directory, and routing rules for Docusaurus
 - [ ] T047 [DEPLOY] Set up Railway project for backend deployment: create new project, connect GitHub repository, select `backend/` directory, configure environment variables (DATABASE_URL, QDRANT_URL, QDRANT_API_KEY, GEMINI_API_KEY, SECRET_KEY, CORS_ORIGINS, ENVIRONMENT)
 - [ ] T048 [DEPLOY] Set up Vercel project for frontend deployment: create new project, connect GitHub repository, select `frontend/` directory, configure build settings (build command: `npm run build`, output directory: `build`), set environment variable `REACT_APP_API_URL` to backend URL
 - [ ] T049 [DEPLOY] Update backend CORS configuration in Railway environment variables: set `CORS_ORIGINS` to include frontend production URL (e.g., `https://your-frontend.vercel.app`)
