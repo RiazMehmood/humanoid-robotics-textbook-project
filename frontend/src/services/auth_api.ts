@@ -149,28 +149,35 @@ export async function signOut(): Promise<void> {
 
   const token = localStorage.getItem('auth_token');
   
-  if (token) {
-    try {
-      const apiUrl = getApiBaseUrl();
-      await fetch(`${apiUrl}/auth/logout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-    } catch (error) {
-      // Continue with local signout even if API call fails
-      console.error('Error during sign out:', error);
-    }
-  }
-
-  // Clear local storage
+  // Clear local storage immediately to ensure UI updates
   try {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user_id');
   } catch (error) {
     console.error('Error clearing localStorage:', error);
+  }
+  
+  if (token) {
+    try {
+      const apiUrl = getApiBaseUrl();
+      // Use sendBeacon if available for more reliable "fire and forget" on unload
+      // Otherwise standard fetch
+      if (navigator.sendBeacon) {
+        const blob = new Blob([JSON.stringify({})], { type: 'application/json' });
+        navigator.sendBeacon(`${apiUrl}/auth/logout`, blob);
+      } else {
+        await fetch(`${apiUrl}/auth/logout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+      }
+    } catch (error) {
+      // Continue with local signout even if API call fails
+      console.error('Error during sign out:', error);
+    }
   }
 }
 
