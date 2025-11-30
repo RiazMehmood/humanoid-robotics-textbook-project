@@ -100,7 +100,7 @@ class PersonalizationService:
         limit: int = 5
     ) -> List[Dict[str, Any]]:
         """
-        Get personalized content recommendations based on user interaction history.
+        Get personalized content recommendations based on user interaction history and background.
         
         Args:
             db: Database session
@@ -113,30 +113,57 @@ class PersonalizationService:
         try:
             recommendations = []
             
-            # Get user interaction history
             if SQLALCHEMY_AVAILABLE and User and hasattr(db, 'query'):
                 user = db.query(User).filter(User.id == user_id).first()
-                if user and user.interaction_history:
-                    history = user.interaction_history
-                    # Extract read chapters and chatbot queries
-                    read_chapters = history.get("read_chapters", [])
-                    chatbot_queries = history.get("chatbot_queries", [])
-                    
-                    # Simple recommendation logic: suggest next chapters or related content
-                    # In a real implementation, this would use ML or more sophisticated algorithms
-                    if read_chapters:
-                        # Recommend next chapters or related topics
-                        for chapter in read_chapters[-3:]:  # Last 3 chapters
+                if user:
+                    # 1. Recommendations based on reading history
+                    if user.interaction_history:
+                        history = user.interaction_history
+                        read_chapters = history.get("read_chapters", [])
+                        
+                        if read_chapters:
+                            for chapter in read_chapters[-3:]:
+                                recommendations.append({
+                                    "contentId": f"{chapter}-next",
+                                    "title": f"Continue reading after {chapter}",
+                                    "type": "chapter",
+                                    "reason": "Based on your reading history"
+                                })
+
+                    # 2. Recommendations based on background info
+                    if len(recommendations) < limit and user.background_info:
+                        bg = user.background_info
+                        
+                        # If novice in Robotics, recommend Intro
+                        if bg.get("roboticsExp") == "novice":
                             recommendations.append({
-                                "contentId": f"chapter-{chapter}-next",
-                                "title": f"Continue from {chapter}",
+                                "contentId": "module1-introduction",
+                                "title": "Introduction to Robotics",
                                 "type": "chapter",
-                                "reason": "Based on your reading history"
+                                "reason": "Recommended for robotics beginners"
                             })
-            
-            # If no recommendations from history, provide default recommendations
-            if not recommendations:
-                recommendations = [
+                            
+                        # If expert in Software but novice in Hardware, recommend Hardware modules
+                        if bg.get("softwareExp") == "expert" and bg.get("hardwareExp") == "novice":
+                             recommendations.append({
+                                "contentId": "module2-sensor-simulation",
+                                "title": "Hardware & Sensors",
+                                "type": "chapter",
+                                "reason": "Bridge your software skills to hardware"
+                            })
+
+                        # If expert in Python, recommend advanced Python agents
+                        if "python" in str(bg.get("programmingLanguages", "")).lower():
+                             recommendations.append({
+                                "contentId": "module1-python-agents-ros",
+                                "title": "Advanced Python Agents in ROS",
+                                "type": "chapter",
+                                "reason": "Leverage your Python expertise"
+                            })
+
+            # 3. Default recommendations if still not enough
+            if len(recommendations) < limit:
+                defaults = [
                     {
                         "contentId": "module1-introduction",
                         "title": "Introduction to Physical AI",
@@ -147,9 +174,14 @@ class PersonalizationService:
                         "contentId": "module2-gazebo-simulation",
                         "title": "Gazebo Simulation",
                         "type": "chapter",
-                        "reason": "Recommended for beginners"
+                        "reason": "Hands-on simulation"
                     }
                 ]
+                # Add defaults that aren't already in recommendations
+                existing_ids = {r["contentId"] for r in recommendations}
+                for d in defaults:
+                    if d["contentId"] not in existing_ids:
+                        recommendations.append(d)
             
             return recommendations[:limit]
         except Exception as e:
