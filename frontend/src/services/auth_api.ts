@@ -3,33 +3,35 @@
  */
 
 // Get API base URL (browser-compatible)
+// Docusaurus injects environment variables at build time via webpack DefinePlugin
 function getApiBaseUrl(): string {
-  // Check for injected API URL (for production builds)
+  // Priority 1: Check for window-injected API URL (from api-config.js script)
   if (typeof window !== 'undefined' && (window as any).__API_BASE_URL__) {
-    return (window as any).__API_BASE_URL__;
+    const url = (window as any).__API_BASE_URL__;
+    if (url && url !== 'API_URL_NOT_CONFIGURED') {
+      return url;
+    }
   }
   
-  // For Docusaurus, environment variables are available at build time
-  // In production, we need to check window location or use a config
+  // Priority 2: Check for webpack-injected environment variable
+  // This works because webpack DefinePlugin replaces process.env.REACT_APP_API_URL at build time
   if (typeof window !== 'undefined') {
-    // Check if we're in production (not localhost)
+    // In production build, webpack will replace this with the actual value
+    const webpackApiUrl = (typeof process !== 'undefined' && (process as any).env?.REACT_APP_API_URL);
+    if (webpackApiUrl && webpackApiUrl !== 'undefined') {
+      return webpackApiUrl;
+    }
+  }
+  
+  // Priority 3: Check if we're in production and log error
+  if (typeof window !== 'undefined') {
     const isProduction = window.location.hostname !== 'localhost' && 
                          window.location.hostname !== '127.0.0.1';
     
     if (isProduction) {
-      // Try to get from environment variable (set at build time)
-      // Docusaurus injects env vars during build
-      const apiUrl = (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) 
-        || (window as any).process?.env?.REACT_APP_API_URL
-        || null;
-      
-      if (apiUrl) {
-        return apiUrl;
-      }
-      
-      // Fallback: try to construct from current host (if backend is on same domain)
-      // Or use a default production URL pattern
-      console.warn('REACT_APP_API_URL not set. Please set it in Vercel environment variables.');
+      console.error('API URL not configured! Please set REACT_APP_API_URL in Vercel environment variables and redeploy.');
+      // Don't return invalid URL, return a clear error message
+      return 'API_URL_NOT_CONFIGURED';
     }
   }
   
@@ -65,6 +67,10 @@ export interface AuthResponse {
  * Sign up a new user.
  */
 export async function signUp(data: SignUpRequest): Promise<AuthResponse> {
+  if (API_BASE_URL === 'API_URL_NOT_CONFIGURED') {
+    throw new Error('API URL not configured. Please set REACT_APP_API_URL in Vercel environment variables.');
+  }
+  
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
     method: 'POST',
     headers: {
@@ -99,6 +105,10 @@ export async function signUp(data: SignUpRequest): Promise<AuthResponse> {
  * Sign in an existing user.
  */
 export async function signIn(data: SignInRequest): Promise<AuthResponse> {
+  if (API_BASE_URL === 'API_URL_NOT_CONFIGURED') {
+    throw new Error('API URL not configured. Please set REACT_APP_API_URL in Vercel environment variables.');
+  }
+  
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
     headers: {
