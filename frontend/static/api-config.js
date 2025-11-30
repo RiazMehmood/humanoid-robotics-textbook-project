@@ -1,11 +1,11 @@
 // API Configuration - Injected at build time
-// This file is generated during build with the REACT_APP_API_URL environment variable
+// This file is automatically updated by scripts/inject-api-url.js during build
+// The placeholder below will be replaced with the actual API URL from REACT_APP_API_URL env var
 (function() {
-  // Get API URL from environment variable (set during Vercel build)
-  // Docusaurus will replace this during build if REACT_APP_API_URL is set
+  // This placeholder will be replaced by the build script
   var apiUrl = 'REACT_APP_API_URL_PLACEHOLDER';
   
-  // If placeholder wasn't replaced, try to get from window location
+  // Safety check: if placeholder wasn't replaced (shouldn't happen in production)
   if (apiUrl === 'REACT_APP_API_URL_PLACEHOLDER') {
     // Check if we're in production
     var isProduction = window.location.hostname !== 'localhost' && 
@@ -13,9 +13,12 @@
     
     if (isProduction) {
       console.error('REACT_APP_API_URL not set in Vercel environment variables!');
+      console.error('Please set REACT_APP_API_URL in Vercel project settings and redeploy.');
       apiUrl = null; // Will cause clear error
     } else {
+      // Development fallback
       apiUrl = 'http://localhost:8000';
+      console.log('Using development API URL:', apiUrl);
     }
   }
   
@@ -25,6 +28,7 @@
     console.log('API Base URL configured:', apiUrl);
   } else {
     console.error('API Base URL not configured. Please set REACT_APP_API_URL in Vercel.');
+    window.__API_BASE_URL__ = 'API_URL_NOT_CONFIGURED';
   }
 })();
 
